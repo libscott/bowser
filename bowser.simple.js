@@ -4,7 +4,7 @@
   * https://github.com/ded/bowser
   * MIT License
   */
-var _br = function () {
+var _br = (function () {
   /**
     * navigator.userAgent =>
     * Chrome:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_7) AppleWebKit/534.24 (KHTML, like Gecko) Chrome/11.0.696.57 Safari/534.24"
@@ -20,23 +20,29 @@ var _br = function () {
       safari = /safari/i.test(ua) && !chrome,
       opera = /opera/i.test(ua),
       firefox = /firefox/i.test(ua),
-      gecko = /gecko\//i.test(ua);
+      gecko = /gecko\//i.test(ua),
+      m = function(r) {
+        try {
+          return ua.match(r)[1];
+        } catch (e) {
+          return null;
+        }
+      };
 
     if (ie) {
-      return 'msie' + ua.match(/msie ([\d]+)/i)[1];
+      return 'msie' + m(/msie ([\d]+)/i);
     }
     if (chrome) {
-      return 'chrome' + ua.match(/chrome\/([\d]+)/i)[1];
+      return 'chrome' + m(/chrome\/([\d]+)/i);
     }
     if (safari) {
-      return 'safari' + ua.match(/version\/([\d]+)/i)[1];
+      return 'safari' + m(/version\/([\d]+)/i);
     }
     if (opera) {
-      return 'opera' + ua.match(/version\/([\d]+)/i)[1];
+      return 'opera' + (m(/version\/([\d]+)/i) || m(/opera\/([\d]+)/i));
     }
     if (gecko) {
-      return (firefox ? 'firefox' : 'gecko') + ua.match(/firefox\/([\d]+)/i)[1];
+      return (firefox ? 'firefox' : 'gecko') + m(/firefox\/([\d]+)/i);
     }
-
-}();
-
+    return null;
+})();
